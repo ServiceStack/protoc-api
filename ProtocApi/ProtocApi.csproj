@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="protoc\include\protobuf-net" />
+    <Folder Include="protoc\linux64" />
+    <Folder Include="tmp" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="ServiceStack" Version="5.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProtocApi.ServiceInterface\ProtocApi.ServiceInterface.csproj" />
+    <ProjectReference Include="..\ProtocApi.ServiceModel\ProtocApi.ServiceModel.csproj" />
+  </ItemGroup>
+
+</Project>
