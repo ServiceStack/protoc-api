@@ -103,10 +103,11 @@ title: gRPC protoc API
             <span class="api-curl">$ curl -F 'file1=@/path/file1.proto' {{ '~/'.resolveUrl() }}/protoc/{lang}</span>
             <div>
                 <a href="https://docs.servicestack.net/add-servicestack-reference">Add ServiceStack Reference</a> -
-                <a href="/json/metadata?op=Protoc">/protoc metadata</a>
+                <a href="https://docs.servicestack.net/web-tool">web {lang} {{ '~/'.resolveUrl() }}</a>
             </div>
             <div>
-                <a href="https://docs.servicestack.net/web-tool">web {lang} {{ '~/'.resolveUrl() }}</a>
+                <a href="/json/metadata?op=Protoc">/protoc metadata</a> -
+                <a href="https://github.com/ServiceStack/protoc-api">github.com/ServiceStack/protoc-api</a>
             </div>
         </div>
     </div>
@@ -119,7 +120,7 @@ title: gRPC protoc API
     </div>
     <div class="row langs">
         {{#each langs}}
-        <button class="btn btn-outline-primary" onclick="upload('{{it.key}}')" disabled>{{it.Value}}</button>
+        <button class="btn btn-outline-primary" onclick="upload('{{it.Key}}')" title="lang='{{it.Key}}'" disabled>{{it.Value}}</button>
         {{/each}}
     </div>
 </div>
