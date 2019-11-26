@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +9,8 @@ using Funq;
 using ServiceStack;
 using ServiceStack.Configuration;
 using ProtocApi.ServiceInterface;
+using ProtocApi.ServiceModel;
+using ServiceStack.Script;
 using ServiceStack.Text;
 
 namespace ProtocApi
@@ -45,10 +49,9 @@ namespace ProtocApi
         {
             SetConfig(new HostConfig
             {
-                DefaultRedirectPath = "/metadata",
                 DebugMode = AppSettings.Get(nameof(HostConfig.DebugMode), false)
             });
-
+            
             var protocPath = Path.Combine(ContentRootDirectory.RealPath, "protoc");
             var protocConfig = new ProtocConfig {
                 ExeName = Env.IsWindows
@@ -61,6 +64,23 @@ namespace ProtocApi
                 TempDirectory = Path.Combine(ContentRootDirectory.RealPath, "tmp"),
             };
             container.Register(protocConfig);
+
+            if (Env.IsWindows)
+                protocConfig.Languages.Remove(Lang.Swift); // protoc-gen-grpc-swift does not exist on Windows
+
+            Plugins.Add(new SharpPagesFeature {
+                ScriptMethods = { new ProtocScriptMethods(protocConfig) }
+            });
         }
+    }
+
+    public class ProtocScriptMethods : ScriptMethods
+    {
+        private readonly ProtocConfig config;
+        public ProtocScriptMethods(ProtocConfig config) => this.config = config;
+
+        private List<KeyValuePair<string, string>> _langs;
+        public List<KeyValuePair<string, string>> langs() => _langs ?? (_langs = config.Languages
+            .Map(x => KeyValuePair.Create(x.Key.ToJsv(), x.Value.Name)).OrderBy(x => x.Key).ToList());
     }
 }

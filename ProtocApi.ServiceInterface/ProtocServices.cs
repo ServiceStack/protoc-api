@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using ServiceStack;
@@ -23,6 +24,8 @@ namespace ProtocApi.ServiceInterface
         public string[] WebModifiers { get; set; }
         
         public bool IndividuallyPerFile { get; set; }
+        
+        public string[] Args { get; set; }
 
         public ProtocOptions(string lang, string name)
         {
@@ -37,45 +40,11 @@ namespace ProtocApi.ServiceInterface
         
         public object Any(Hello request) => new HelloResponse { Result = $"Hello, {request.Name}!" };
 
-        public static Dictionary<Lang, ProtocOptions> LangConfig = new Dictionary<Lang, ProtocOptions> {
-            { Lang.Cpp, new ProtocOptions("cpp","C++") },
-            { Lang.CSharp, new ProtocOptions("csharp","C#") },
-            { Lang.Java, new ProtocOptions("java","Java") },
-            // Java Lite (Android) https://github.com/protocolbuffers/protobuf/blob/master/java/lite.md
-            { Lang.JavaLite, new ProtocOptions("java","Java") { OutModifiers = new[] { OutModifier.Lite } } }, 
-            { Lang.ObjectiveC, new ProtocOptions("objc","Objective C") }, 
-            { Lang.Php, new ProtocOptions("php","PHP") },
-            { Lang.Python, new ProtocOptions("python","Python") }, 
-            { Lang.Ruby, new ProtocOptions("ruby","Ruby") },
-            { Lang.JavaScriptClosure, new ProtocOptions("js","JavaScript (Closure)") {
-                OutModifiers = new[] { OutModifier.ImportStyleClosure },
-            } },
-            { Lang.JavaScriptCommonJs, new ProtocOptions("js","JavaScript (CommonJS)") {
-                OutModifiers = new[] { OutModifier.ImportStyleCommonJs },
-                WebModifiers = new [] { OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText },
-            } },
-//            { Lang.JavaScriptCommonJsDts, new ProtocOptions("js","JavaScript (CommonJS + .d.ts)") {
-//                OutModifiers = new [] { OutModifier.ImportStyleCommonJsDts },
-//                WebModifiers = new [] { OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText },
-//            } },
-            { Lang.TypeScript, new ProtocOptions("js","TypeScript") {
-                OutModifiers = new [] { OutModifier.ImportStyleCommonJs }, 
-                WebModifiers = new [] { OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWebText },
-            } },
-            { Lang.TypeScriptBinary, new ProtocOptions("js","TypeScript (Binary)") {
-                OutModifiers = new [] { OutModifier.ImportStyleCommonJs, OutModifier.Binary }, 
-                WebModifiers = new [] { OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWeb },
-            } },
-            { Lang.Go, new ProtocOptions("go","Go") {
-                OutModifiers = new[]{ OutModifier.PluginGo },
-                IndividuallyPerFile = true,
-            }  },
-        }; 
-        
         public ProtocConfig ProtocConfig { get; set; }
         
         public object Any(Protoc request)
         {
+            var tmpId = (Request as IHasStringId)?.Id ?? Guid.NewGuid().ToString();
             var files = request.Files; 
             if (request.Files.IsEmpty())
             {
@@ -85,11 +54,36 @@ namespace ProtocApi.ServiceInterface
                 files = new Dictionary<string, string>();
                 foreach (var httpFile in Request.Files)
                 {
-                    files[httpFile.FileName ?? httpFile.Name] = httpFile.InputStream.ReadToEnd();
+                    var fileName = httpFile.FileName ?? httpFile.Name;
+                    if (!fileName.EndsWith(".proto") && !fileName.EndsWith(".zip"))
+                        throw new ArgumentException($"Unsupported file '{fileName}'. Only .proto or .zip files supported.");
+
+                    if (fileName.EndsWith(".zip"))
+                    {
+                        var tmpZipPath = Path.GetTempFileName();
+                        var tmpDir = Path.Combine(Path.GetTempPath(), "protoc-api", tmpId);
+                        httpFile.SaveTo(tmpZipPath);
+                        
+                        ZipFile.ExtractToDirectory(tmpZipPath, tmpDir);
+                        
+                        var tmpDirInfo = new DirectoryInfo(tmpDir);
+                        var hasProtoRootDir = tmpDirInfo.GetFiles("*.proto").Length > 0;
+                        var fsZipDir = !hasProtoRootDir && tmpDirInfo.GetDirectories().Length == 1
+                            ? new FileSystemVirtualFiles(tmpDirInfo.GetDirectories()[0].FullName)
+                            : new FileSystemVirtualFiles(tmpDirInfo.FullName);
+
+                        foreach (var file in fsZipDir.GetAllFiles().Where(x => x.Extension == "proto"))
+                        {
+                            files[file.VirtualPath] = file.ReadAllText();
+                        }
+                    }
+                    else
+                    {
+                        files[fileName] = httpFile.InputStream.ReadToEnd();
+                    }
                 }
             }
 
-            var tmpId = (Request as IHasStringId)?.Id ?? Guid.NewGuid().ToString();
             var tmpPath = Path.Combine(ProtocConfig.TempDirectory, tmpId);
             var outPath = Path.Combine(tmpPath, "out");
             try { Directory.CreateDirectory(outPath); } catch {}
@@ -97,7 +91,7 @@ namespace ProtocApi.ServiceInterface
             var fs = new FileSystemVirtualFiles(tmpPath);
             fs.WriteFiles(files);
 
-            var langOptions = LangConfig[request.Lang];
+            var langOptions = ProtocConfig.Languages[request.Lang];
             var args = StringBuilderCache.Allocate();
 
             var outArgs = "";
@@ -129,6 +123,14 @@ namespace ProtocApi.ServiceInterface
                 args.AppendFormat($" --grpc-web_out={webArgs}out");
             }
 
+            if (!langOptions.Args.IsEmpty())
+            {
+                foreach (var arg in langOptions.Args)
+                {
+                    args.Append($" {arg}");
+                }
+            }
+
             if (!langOptions.IndividuallyPerFile)
             {
                 foreach (var entry in files)
@@ -147,8 +149,10 @@ namespace ProtocApi.ServiceInterface
                 }
             }
 
+            var serviceName = files.Count == 1 ? files.Keys.First() : "grpc";
             var response = new ProtocResponse {
-                GeneratedFiles = new Dictionary<string, string>()
+                GeneratedFiles = new Dictionary<string, string>(),
+                ArchiveUrl = Request.ResolveAbsoluteUrl(new GetArchive { RequestId = tmpId, FileName = $"{serviceName}.{langOptions.Lang}.zip" }.ToGetUrl()),
             };
 
             var fsOut = new FileSystemVirtualFiles(Path.Combine(tmpPath, "out"));
@@ -192,6 +196,21 @@ namespace ProtocApi.ServiceInterface
                 if (!string.IsNullOrEmpty(error))
                     throw new Exception($"`protoc {process.StartInfo.Arguments}` command failed: {error}\n\n{output}");
             }
+        }
+
+        public object Any(GetArchive request)
+        {
+            if (string.IsNullOrEmpty(request.RequestId))
+                throw new ArgumentNullException(nameof(request.RequestId));
+            
+            var tmpPath = Path.Combine(ProtocConfig.TempDirectory, request.RequestId, "out");
+            if (!Directory.Exists(tmpPath))
+                throw HttpError.NotFound("Temporary archive no longer exists");
+
+            var tmpZipPath = Path.Combine(ProtocConfig.TempDirectory, request.RequestId, request.FileName ?? "grpc.zip");
+            ZipFile.CreateFromDirectory(tmpPath, tmpZipPath);
+            
+            return new HttpResult(new FileInfo(tmpZipPath), asAttachment:true);
         }
     }
 }

@@ -1,0 +1,247 @@
+<!--
+title: gRPC protoc API
+-->
+
+<style>
+    h2 {
+        color: #0CC1C8;
+    }
+    #files-list, [data-validation-summary], #gen-files {
+        display: none;
+    }
+    form {
+        margin: 20px 0;
+    }
+    .langs button {
+        margin: 4px 2px;
+    }
+    .file-control {
+        position: absolute;
+    }
+    .file-custom {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;        
+        z-index: 5;
+        height: 2.5rem;
+        padding: .5rem 1rem;
+        line-height: 1.2;
+        color: #555;
+        background-color: #fff;
+        border: .075rem solid #ddd;
+        border-radius: .25rem;
+        box-shadow: inset 0 0.2rem 0.4rem rgba(0, 0, 0, .05);
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .file-custom:before {
+        position: absolute;
+        top: -.075rem;
+        right: -.075rem;
+        bottom: -.075rem;
+        z-index: 6;
+        display: block;
+        content: "Browse";
+        height: 2.5rem;
+        padding: .5rem 1rem;
+        line-height: 1.2;
+        color: #555;
+        background-color: #eee;
+        border: .075rem solid #ddd;
+        border-radius: 0 .25rem .25rem 0;
+    }
+    .file-custom:after {
+        content: "Choose .proto or .zip file(s)...";
+    }
+    form {
+    }
+    #file-input {
+        min-width: 22rem;
+        margin: 0;
+        filter: alpha(opacity=0);
+        opacity: 0;
+    }
+    #files-list {
+        margin-bottom: 10px;
+    }
+    #gen-files textarea {
+        width: 100%;
+        height: 600px;
+        font-size: 14px;
+    }
+    .api-usage {
+        font-size: 14px;
+    }
+    .zip-archive {
+        font-size: 1.3em;
+    }
+    .normal-weight {
+        font-weight: normal;
+    }
+</style>
+
+<p class="lead">
+    Generate gRPC clients from <b>.proto</b> descriptor files.
+</p>
+
+<form action="" method="post">
+    <div class="form-row">
+        <div class="form-group alert alert-danger" data-validation-summary=""></div>
+    </div>
+    <div id="multi-uploads" class="form-row">
+        <div class="form-group col col-6">
+            <div class="file-control">
+                <input type="file" id="file-input">
+                <span class="file-custom" onclick="openFiles()"></span>
+            </div>
+        </div>
+        <div class="col col-6 api-usage">
+            <h5>API Usage Examples</h5>
+            <span class="api-curl">$ curl -F 'file1=@/path/file1.proto' {{ '~/'.resolveUrl() }}/protoc/{lang}</span>
+            <div>
+                <a href="https://docs.servicestack.net/add-servicestack-reference">Add ServiceStack Reference</a> -
+                <a href="/json/metadata?op=Protoc">/protoc metadata</a>
+            </div>
+            <div>
+                <a href="https://docs.servicestack.net/web-tool">web {lang} {{ '~/'.resolveUrl() }}</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="container">
+    <div id="files-list" class="row">
+        <div class="files"></div>
+        <button class="btn btn-sm btn-danger" onclick="clearFilesList()">clear all</button>
+    </div>
+    <div class="row langs">
+        {{#each langs}}
+        <button class="btn btn-outline-primary" onclick="upload('{{it.key}}')" disabled>{{it.Value}}</button>
+        {{/each}}
+    </div>
+</div>
+
+<div id="gen-files" class="container mt-4">
+    <h4 class="normal-weight">Generated Files</h4>
+    <div class="row">
+        <div class="col-3">
+            <ul class="nav flex-column nav-pills mt-3" role="tablist">
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="tab-content">
+            </div>
+        </div>
+    </div>
+    <div class="zip-archive mt-2"></div>
+</div>
+
+<script>
+    var form = document.querySelector('form');
+    var fileInput = document.querySelector('#file-input');
+    var validationSummary = document.querySelector('[data-validation-summary]');
+    var fileList = [];
+    
+    function openFiles() {
+        fileInput.click();
+    }
+
+    fileInput.addEventListener('change', function (e) {
+        e.preventDefault();
+        console.log('change:', this.files);
+        for (var i=0; i<this.files.length; i++) {
+            fileList.push(this.files[i]);
+        }
+        render();
+    });
+    
+    function render() {
+        var sb = "";
+        fileList.forEach(function (val, i) { 
+           sb += ("<div>" + val.name + "</div>"); 
+        });
+        var hasFiles = fileList.length > 0;
+        document.querySelector('#files-list').style.display = hasFiles ? 'block' : 'none';
+        document.querySelector('#files-list .files').innerHTML = sb;
+        document.querySelectorAll('.langs button').forEach(function(btn) {
+            if (hasFiles) {
+                btn.removeAttribute('disabled');
+            } else {
+                btn.setAttribute('disabled','disabled');
+            }
+        })
+    }
+    
+    function clearFilesList() {
+        fileList.length = 0;
+        render();
+    }
+
+    function splitOnFirst (s, c) { 
+        if (!s) return [s]; 
+        var pos = s.indexOf(c); 
+        return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s]; 
+    }
+    function splitOnLast(s, c) { 
+        if (!s) return [s]; 
+        var pos = s.lastIndexOf(c); 
+        return pos >= 0 ? [s.substring(0, pos), s.substring(pos + 1)] : [s]; 
+    }
+    
+    function htmlEncode(s) { 
+        return (s || '').replace(/&/g,'&amp;').replace(/</g,"&lt;").replace(/>/g,"&gt;"); 
+    }
+
+    function upload(lang) {
+        validationSummary.style.display = 'none';
+        document.querySelector('#gen-files').style.display = 'none';
+        document.querySelector('#gen-files .zip-archive').innerHTML = '';
+        var url = "/protoc/" + lang;
+        var formData = new FormData();
+        var xhr = new XMLHttpRequest();
+        for (var i=0; i<fileList.length; i++) {
+            formData.set('file'+i, fileList[i]);
+        }
+        xhr.onload = function (ev) {
+            if (this.status === 200) {
+                var json = JSON.parse(xhr.responseText);
+                var sb = "", sbBody = "";
+                var i = 0;
+                for (var name in json.generatedFiles) {
+                    var id = name.replace(/\./g,'-').replace(/\//g,'-');
+                    var cls = i++ === 0 ? ' active' : ''; 
+                    sb += '<li class="nav-item"><a class="nav-link' + cls + '" id="' + id + '-tab" data-toggle="pill" href="#' + id + '" role="tab" aria-controls="' + id + '" aria-selected="true">';
+                    sb += name;
+                    sb += '</a></li>';
+                    
+                    sbBody += '<div class="tab-pane' + cls + '" id="' + id + '" role="tabpanel" aria-labelledby="' + id + '-tab">';
+                    sbBody += '<textarea autofocus="autofocus" onfocus="this.select()">' + htmlEncode(json.generatedFiles[name]) + '</textarea>';
+                    sbBody += '</div>';
+                }
+                if (json.archiveUrl) {
+                    var name = splitOnLast(json.archiveUrl, '/')[1];
+                    document.querySelector('#gen-files .zip-archive').innerHTML = '<label>Download</label> <a href="' + json.archiveUrl + '">' + name + '</a>';
+                }
+                document.querySelector('#gen-files').style.display = 'block';
+                document.querySelector('#gen-files .nav').innerHTML = sb;
+                document.querySelector('#gen-files .tab-content').innerHTML = sbBody;
+            } else {
+                try {
+                    var json = JSON.parse(xhr.responseText);
+                    validationSummary.innerHTML = json.responseStatus && json.responseStatus.message;
+                } catch (e) {
+                    validationSummary.innerHTML = xhr.statusText;
+                } finally {
+                    validationSummary.style.display = 'block';
+                }
+            }
+        };
+        xhr.open("POST", url);
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.send(formData);        
+    }
+    
+</script>

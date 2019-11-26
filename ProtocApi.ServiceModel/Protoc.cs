@@ -9,9 +9,6 @@ namespace ProtocApi.ServiceModel
     public class Protoc : IReturn<ProtocResponse>
     {
         public Lang Lang { get; set; }
-        public ImportStyle[] ImportStyles { get; set; }
-        public ImportStyle[] WebImportStyles { get; set; }
-        public WebMode? WebMode { get; set; }
         public Dictionary<string, string> Files { get; set; }
     }
     
@@ -19,6 +16,7 @@ namespace ProtocApi.ServiceModel
     {
         public Lang Lang { get; set; }
         public Dictionary<string, string> GeneratedFiles { get; set; }
+        public string ArchiveUrl { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
     }
 
@@ -66,6 +64,8 @@ namespace ProtocApi.ServiceModel
         Cpp,
         [EnumMember(Value = "csharp")]
         CSharp,
+        [EnumMember(Value = "dart")]
+        Dart,
         [EnumMember(Value = "java")]
         Java,
         [EnumMember(Value = "java-lite")]
@@ -86,6 +86,8 @@ namespace ProtocApi.ServiceModel
         JavaScriptCommonJs,
 //        [EnumMember(Value = "js-tsd")] // doesn't work, uses closure
 //        JavaScriptCommonJsDts,
+        [EnumMember(Value = "swift")]
+        Swift,
         [EnumMember(Value = "ts")]
         TypeScript,
         [EnumMember(Value = "ts-binary")]
