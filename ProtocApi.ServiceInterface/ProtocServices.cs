@@ -208,7 +208,10 @@ namespace ProtocApi.ServiceInterface
                 throw HttpError.NotFound("Temporary archive no longer exists");
 
             var tmpZipPath = Path.Combine(ProtocConfig.TempDirectory, request.RequestId, request.FileName ?? "grpc.zip");
-            ZipFile.CreateFromDirectory(tmpPath, tmpZipPath);
+            if (!File.Exists(tmpZipPath))
+            {
+                ZipFile.CreateFromDirectory(tmpPath, tmpZipPath);
+            }
             
             return new HttpResult(new FileInfo(tmpZipPath), asAttachment:true);
         }
