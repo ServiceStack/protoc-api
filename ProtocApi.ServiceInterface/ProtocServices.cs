@@ -44,7 +44,7 @@ namespace ProtocApi.ServiceInterface
         
         public object Any(Protoc request)
         {
-            var tmpId = (Request as IHasStringId)?.Id ?? Guid.NewGuid().ToString();
+            var tmpId = (Request as IHasStringId)?.Id?.Replace("|","").Replace(".","") ?? Guid.NewGuid().ToString();
             var files = request.Files; 
             if (request.Files.IsEmpty())
             {
