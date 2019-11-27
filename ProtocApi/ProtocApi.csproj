@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="protoc\include\protobuf-net" />
-    <Folder Include="protoc\linux64" />
-    <Folder Include="wwwroot\" />
+    <None Update="protoc\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="ServiceStack" Version="5.*" />
   </ItemGroup>
