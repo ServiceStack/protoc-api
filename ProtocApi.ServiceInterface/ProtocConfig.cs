@@ -53,11 +53,11 @@ namespace ProtocApi.ServiceInterface
                 }
             },
             // only available in Linux https://github.com/grpc/grpc-swift/blob/nio/docs/quick-start.md
+            // need to build with: swift build -Xcc -DTSI_OPENSSL_ALPN_SUPPORT=0 https://github.com/grpc/grpc-swift/pull/238
+            // https://github.com/apple/swift-protobuf/blob/master/Documentation/PLUGIN.md
             {Lang.Swift, new ProtocOptions("swift", "Swift") {
                 Args = new [] {
                     "--swift_opt=Visibility=Public",
-                    "--grpc-swift_opt=Visibility=Public",
-                    "--grpc-swift_out=out",
                 }
             }}
         };
