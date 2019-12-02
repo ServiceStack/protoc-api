@@ -93,4 +93,13 @@ namespace ProtocApi.ServiceModel
         [EnumMember(Value = "ts-binary")]
         TypeScriptBinary,
     }
+
+    [Route("/langs", "GET")]
+    public class GetLanguages { }
+
+    public class GetLanguagesResponse
+    {
+        public List<KeyValuePair<string, string>> Results { get; set; }
+        public ResponseStatus ResponseStatus { get; set; }
+    }
 }

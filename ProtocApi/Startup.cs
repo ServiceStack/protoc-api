@@ -76,8 +76,7 @@ namespace ProtocApi
         private readonly ProtocConfig config;
         public ProtocScriptMethods(ProtocConfig config) => this.config = config;
 
-        private List<KeyValuePair<string, string>> _langs;
-        public List<KeyValuePair<string, string>> langs() => _langs ?? (_langs = config.Languages
-            .Map(x => KeyValuePair.Create(x.Key.ToJsv(), x.Value.Name)).OrderBy(x => x.Key).ToList());
+        public List<KeyValuePair<string, string>> langs(ScriptScopeContext scope) =>
+            (Context.GetServiceStackFilters().execService(scope, nameof(GetLanguages)) as GetLanguagesResponse)?.Results;
     }
 }
