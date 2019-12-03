@@ -73,6 +73,11 @@ title: gRPC protoc API
         height: 600px;
         font-size: 14px;
     }
+    .api-curl {
+        background: #f1f1f1;
+        padding: 5px 10px;
+        margin: 0 0 5px 0;
+    }
     .api-usage {
         font-size: 14px;
     }
@@ -101,7 +106,7 @@ title: gRPC protoc API
         </div>
         <div class="col col-6 api-usage">
             <h5>API Usage Examples</h5>
-            <span class="api-curl">$ curl -F 'file1=@/path/file1.proto' {{ '~/'.resolveUrl() }}/protoc/<a href="/langs">{lang}</a></span>
+            <div class="api-curl">$ curl -F 'file1=@/file1.proto' {{ '~/'.resolveUrl() }}/protoc/<a href="/langs">{lang}</a>.<a href="https://docs.servicestack.net/formats#http-api-formats">json</a></div>
             <div>
                 <a href="https://docs.servicestack.net/add-servicestack-reference">Add ServiceStack Reference</a> &bull;
                 <a href="https://docs.servicestack.net/web-tool">web {lang} {{ '~/'.resolveUrl() }}</a>
