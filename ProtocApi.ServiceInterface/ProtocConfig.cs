@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ProtocApi.ServiceModel;
 
@@ -11,7 +12,15 @@ namespace ProtocApi.ServiceInterface
         public string TempDirectory { get; set; }
 
         public Dictionary<Lang, ProtocOptions> Languages { get; set; } = new Dictionary<Lang, ProtocOptions> {
-            {Lang.Cpp, new ProtocOptions("cpp", "C++")},
+            {
+                Lang.Cpp, new ProtocOptions("cpp", "C++")
+                {
+//                    GrpcOutModifiers = new string[]{},
+//                    Args = new [] {
+//                        "--plugin=protoc-gen-grpc=grpc_cpp_plugin.exe"
+//                    }
+                }
+            },
             {Lang.CSharp, new ProtocOptions("csharp", "C#")},
             // requires installing https://pub.dev/packages/protoc_plugin on same server
             {Lang.Dart, new ProtocOptions("dart", "Dart")},

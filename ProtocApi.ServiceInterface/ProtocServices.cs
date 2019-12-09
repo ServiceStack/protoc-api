@@ -21,6 +21,7 @@ namespace ProtocApi.ServiceInterface
         public string Lang { get; set; }
         public string Name { get; set; }
         public string[] OutModifiers { get; set; }
+        public string[] GrpcOutModifiers { get; set; }
         public string[] WebModifiers { get; set; }
         
         public bool IndividuallyPerFile { get; set; }
@@ -106,8 +107,26 @@ namespace ProtocApi.ServiceInterface
                 if (outArgs.Length > 0)
                     outArgs += ":";
             }
+
+            var grpcOut = "";
+            if (langOptions.GrpcOutModifiers != null)
+            {
+                grpcOut = " --grpc_out=";
+                for (var i = 0; i < langOptions.GrpcOutModifiers.Length; i++)
+                {
+                    if (i > 0)
+                        grpcOut += ",";
+                    
+                    var modifier = langOptions.GrpcOutModifiers[i];
+                    grpcOut += modifier;
+                }
+
+                if (langOptions.GrpcOutModifiers.Length > 0)
+                    grpcOut += ":";
+                grpcOut += "out";
+            }
             
-            args.AppendFormat($"-I . -I \"{ProtocConfig.ProtoIncludeDirectory}\" --{langOptions.Lang}_out={outArgs}out");
+            args.AppendFormat($"-I . -I \"{ProtocConfig.ProtoIncludeDirectory}\" --{langOptions.Lang}_out={outArgs}out{grpcOut}");
 
             if (!langOptions.WebModifiers.IsEmpty())
             {
