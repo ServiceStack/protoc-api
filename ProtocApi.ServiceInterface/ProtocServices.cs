@@ -189,7 +189,7 @@ namespace ProtocApi.ServiceInterface
         {
             var process = new Process {
                 StartInfo = {
-                    FileName = Path.Combine(ProtocConfig.WorkingDirectory, ProtocConfig.ExeName),
+                    FileName = ProtocConfig.ExePath,
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     RedirectStandardOutput = true,
@@ -200,7 +200,7 @@ namespace ProtocApi.ServiceInterface
             };
 
             if (log.IsDebugEnabled)
-                log.Debug($"{ProtocConfig.ExeName} {process.StartInfo.Arguments}");
+                log.Debug($"{ProtocConfig.ExePath} {process.StartInfo.Arguments}");
 
             using (process)
             {

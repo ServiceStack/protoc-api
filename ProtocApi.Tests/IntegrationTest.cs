@@ -28,13 +28,14 @@ namespace ProtocApi.Tests
                 
                 var contentRoot = Path.GetFullPath("../../../../ProtocApi");
                 var protocPath = Path.Combine(contentRoot, "protoc");
+                var exeDirPath = Env.IsWindows
+                    ? Path.Combine(protocPath, "win64")
+                    : Path.Combine(protocPath, "linux64");
                 var protocConfig = new ProtocConfig {
-                    ExeName = Env.IsWindows
-                        ? "protoc.exe"
-                        : "protoc",
-                    WorkingDirectory = Env.IsWindows
-                        ? Path.Combine(protocPath, "win64")
-                        : Path.Combine(protocPath, "linux64"),
+                    ExePath = Env.IsWindows
+                        ? Path.Combine(exeDirPath, "protoc.exe")
+                        : Path.Combine(exeDirPath, "protoc"),
+                    PluginPath = exeDirPath,
                     ProtoIncludeDirectory = Path.Combine(protocPath, "include"),
                     TempDirectory = Path.Combine(contentRoot, "tmp"),
                 };
