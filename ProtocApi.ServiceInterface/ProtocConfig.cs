@@ -15,10 +15,10 @@ namespace ProtocApi.ServiceInterface
             {
                 Lang.Cpp, new ProtocOptions("cpp", "C++")
                 {
-//                    GrpcOutModifiers = new string[]{},
-//                    Args = new [] {
-//                        "--plugin=protoc-gen-grpc=grpc_cpp_plugin.exe"
-//                    }
+                    GrpcOutModifiers = new string[]{},
+                    Args = new [] {
+                        "--plugin=protoc-gen-grpc=grpc_cpp_plugin"
+                    }
                 }
             },
             {Lang.CSharp, new ProtocOptions("csharp", "C#")},
