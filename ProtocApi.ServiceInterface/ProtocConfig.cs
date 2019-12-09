@@ -29,9 +29,20 @@ namespace ProtocApi.ServiceInterface
                         }
                     }
                 },
-                {Lang.CSharp, new ProtocOptions("csharp", "C#")},
+                {
+                    Lang.CSharp, new ProtocOptions("csharp", "C#") {
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_csharp_plugin")}"
+                        }
+                    }
+                },
                 // requires installing https://pub.dev/packages/protoc_plugin on same server
-                {Lang.Dart, new ProtocOptions("dart", "Dart")},
+                {
+                    Lang.Dart, new ProtocOptions("dart", "Dart") {
+                        OutModifiers = new []{ "grpc" }
+                    }
+                },
                 {Lang.Java, new ProtocOptions("java", "Java")},
                 // Java Lite (Android) https://github.com/protocolbuffers/protobuf/blob/master/java/lite.md
                 {Lang.JavaLite, new ProtocOptions("java", "Java (Lite)") {OutModifiers = new[] {OutModifier.Lite}}},
