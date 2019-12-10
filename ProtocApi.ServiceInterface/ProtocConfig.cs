@@ -43,9 +43,25 @@ namespace ProtocApi.ServiceInterface
                         OutModifiers = new []{ "grpc" }
                     }
                 },
-                {Lang.Java, new ProtocOptions("java", "Java")},
+                // https://grpc.io/docs/reference/java/generated-code/
+                {
+                    Lang.Java, new ProtocOptions("java", "Java") {
+                        Args = new[] {
+                            $"--plugin={pluginPath("protoc-gen-grpc-java")}",
+                            "--grpc-java_out=out",
+                        }
+                    }
+                },
                 // Java Lite (Android) https://github.com/protocolbuffers/protobuf/blob/master/java/lite.md
-                {Lang.JavaLite, new ProtocOptions("java", "Java (Lite)") {OutModifiers = new[] {OutModifier.Lite}}},
+                {
+                    Lang.JavaLite, new ProtocOptions("java", "Java (Lite)") {
+                        OutModifiers = new[] { OutModifier.Lite },
+                        Args = new[] {
+                            $"--plugin={pluginPath("protoc-gen-grpc-java")}",
+                            "--grpc-java_out=out",
+                        }
+                    }
+                },
                 {Lang.ObjectiveC, new ProtocOptions("objc", "Objective C")},
                 {Lang.Php, new ProtocOptions("php", "PHP")},
                 {Lang.Python, new ProtocOptions("python", "Python")},
