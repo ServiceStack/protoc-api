@@ -21,6 +21,8 @@ namespace ProtocApi.ServiceInterface
         public string[] GrpcOutModifiers { get; set; }
         public string[] GrpcWebModifiers { get; set; }
         
+        public string GrpcSubDir { get; set; }
+        
         public bool IndividuallyPerFile { get; set; }
         
         public string[] Args { get; set; }
@@ -129,6 +131,9 @@ namespace ProtocApi.ServiceInterface
                 if (langOptions.GrpcOutModifiers.Length > 0)
                     grpcOut += ":";
                 grpcOut += "out";
+
+                if (langOptions.GrpcSubDir != null)
+                    grpcOut += "/" + langOptions.GrpcSubDir;
             }
             
             args.AppendFormat($"-I . -I \"{ProtocConfig.ProtoIncludeDirectory}\" --{langOptions.Lang}_out={outArgs}out{grpcOut}");
