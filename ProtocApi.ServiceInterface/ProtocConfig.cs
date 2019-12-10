@@ -145,7 +145,6 @@ namespace ProtocApi.ServiceInterface
                 // https://github.com/apple/swift-protobuf/blob/master/Documentation/PLUGIN.md
                 {
                     Lang.Swift, new ProtocOptions("swift", "Swift") {
-                        GrpcOutModifiers = new string[] {},
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("protoc-gen-swift")}",
                             "--swift_opt=Visibility=Public",
