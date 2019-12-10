@@ -62,35 +62,49 @@ namespace ProtocApi.ServiceInterface
                         }
                     }
                 },
-                {Lang.ObjectiveC, new ProtocOptions("objc", "Objective C")},
-                {Lang.Php, new ProtocOptions("php", "PHP")},
-                {Lang.Python, new ProtocOptions("python", "Python")},
-                {Lang.Ruby, new ProtocOptions("ruby", "Ruby")}, {
+                {
+                    Lang.ObjectiveC, new ProtocOptions("objc", "Objective C")
+                },
+                {
+                    Lang.Php, new ProtocOptions("php", "PHP")
+                },
+                {
+                    Lang.Python, new ProtocOptions("python", "Python")
+                },
+                {
+                    Lang.Ruby, new ProtocOptions("ruby", "Ruby")
+                }, 
+                {
                     Lang.JavaScriptClosure, new ProtocOptions("js", "JavaScript (Closure)") {
                         OutModifiers = new[] {OutModifier.ImportStyleClosure},
                     }
-                }, {
+                }, 
+                {
                     Lang.JavaScriptCommonJs, new ProtocOptions("js", "JavaScript (CommonJS)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
                         WebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 },
-// in contrast to docs commonjs + .d.ts doesn't work
-//            { Lang.JavaScriptCommonJsDts, new ProtocOptions("js","JavaScript (CommonJS + .d.ts)") {
-//                OutModifiers = new [] { OutModifier.ImportStyleCommonJsDts },
-//                WebModifiers = new [] { OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText },
-//            } },
+                // in contrast to docs commonjs + .d.ts doesn't work
+//                {
+//                    Lang.JavaScriptCommonJsDts, new ProtocOptions("js", "JavaScript (CommonJS + .d.ts)") {
+//                        OutModifiers = new[] {OutModifier.ImportStyleCommonJsDts},
+//                        WebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
+//                    }
+//                },
                 {
                     Lang.TypeScript, new ProtocOptions("js", "TypeScript") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
                         WebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWebText},
                     }
-                }, {
+                }, 
+                {
                     Lang.TypeScriptBinary, new ProtocOptions("js", "TypeScript (Binary)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.Binary},
                         WebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWeb},
                     }
-                }, {
+                }, 
+                {
                     Lang.Go, new ProtocOptions("go", "Go") {
                         OutModifiers = new[] {OutModifier.PluginGo},
                         IndividuallyPerFile = true,

@@ -46,7 +46,8 @@ namespace ProtocApi
         {
             SetConfig(new HostConfig
             {
-                DebugMode = AppSettings.Get(nameof(HostConfig.DebugMode), false)
+                DebugMode = AppSettings.Get(nameof(HostConfig.DebugMode), false),
+                AllowFileExtensions = { "proto" }
             });
             
             var protocPath = Path.Combine(ContentRootDirectory.RealPath, "protoc");

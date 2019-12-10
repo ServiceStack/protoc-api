@@ -3,7 +3,11 @@ title: gRPC protoc API
 -->
 
 <style>
-    h2 {
+    h2, h2 a {
+        color: #0CC1C8;
+    }
+    h2 a:hover {
+        text-decoration: none;
         color: #0CC1C8;
     }
     #files-list, [data-validation-summary], #gen-files {
@@ -25,6 +29,8 @@ title: gRPC protoc API
         right: 0;
         left: 0;        
         z-index: 5;
+    }
+    .shadow-input {
         height: 2.5rem;
         padding: .5rem 1rem;
         line-height: 1.2;
@@ -54,6 +60,9 @@ title: gRPC protoc API
         border: .075rem solid #ddd;
         border-radius: 0 .25rem .25rem 0;
     }
+    .url-control input[disabled], .file-custom[disabled] {
+        background: #f1f1f1;
+    }
     .file-custom:after {
         content: "Choose .proto or .zip file(s)...";
     }
@@ -75,7 +84,7 @@ title: gRPC protoc API
     }
     .api-curl {
         background: #f1f1f1;
-        padding: 5px 10px;
+        padding: 10px;
         margin: 0 0 5px 0;
     }
     .api-usage {
@@ -101,7 +110,13 @@ title: gRPC protoc API
         <div class="form-group col col-6">
             <div class="file-control">
                 <input type="file" id="file-input">
-                <span class="file-custom" onclick="openFiles()"></span>
+                <span class="file-custom shadow-input" onclick="openFiles()"></span>
+            </div>
+            <div class="mb-2 pt-5 text-muted ml-3">or</div>
+            <div class="url-control">
+                <input type="text" id="url-input" class="url-custom shadow-input" style="width:22rem" placeholder="URL to .proto">
+                <div><small class="text-muted" style="margin-right:-.5em">try</small><button class="btn btn-link mb-1" 
+                        onclick="document.getElementById('url-input').value='{{ `~/services.proto`.resolveUrl() }}'; render();">services.proto</button></div>
             </div>
         </div>
         <div class="col col-6 api-usage">
@@ -149,12 +164,21 @@ title: gRPC protoc API
 <script>
     var form = document.querySelector('form');
     var fileInput = document.querySelector('#file-input');
+    var fileCustom = document.querySelector('.file-custom');
+    var urlInput = document.querySelector('#url-input');
+    var btnExample = document.querySelector('.url-control button');
     var validationSummary = document.querySelector('[data-validation-summary]');
     var fileList = [];
     
     function openFiles() {
+        if (fileCustom.hasAttribute('disabled'))
+            return;
         fileInput.click();
     }
+
+    form.onsubmit = function(e) {
+      e.preventDefault();
+    };
 
     fileInput.addEventListener('change', function (e) {
         e.preventDefault();
@@ -165,21 +189,39 @@ title: gRPC protoc API
         render();
     });
     
+    urlInput.addEventListener('input', function (e) {
+       render(); 
+    });
+    
     function render() {
         var sb = "";
         fileList.forEach(function (val, i) { 
            sb += ("<div>" + val.name + "</div>"); 
         });
         var hasFiles = fileList.length > 0;
+        var hasUrl = urlInput.value.startsWith('http://') || urlInput.value.startsWith('https://');
         document.querySelector('#files-list').style.display = hasFiles ? 'block' : 'none';
         document.querySelector('#files-list .files').innerHTML = sb;
+
+        if (hasFiles) {
+            urlInput.setAttribute('disabled','disabled');
+            btnExample.setAttribute('disabled','disabled');
+            fileCustom.removeAttribute('disabled');
+        } else if (hasUrl) {
+            fileCustom.setAttribute('disabled','disabled');
+        } else {
+            urlInput.removeAttribute('disabled');
+            btnExample.removeAttribute('disabled');
+            fileCustom.removeAttribute('disabled');
+        }
+
         document.querySelectorAll('.langs button').forEach(function(btn) {
-            if (hasFiles) {
+            if (hasFiles || hasUrl) {
                 btn.removeAttribute('disabled');
             } else {
                 btn.setAttribute('disabled','disabled');
             }
-        })
+        });
     }
     
     function clearFilesList() {
@@ -209,6 +251,11 @@ title: gRPC protoc API
         var url = "/protoc/" + lang;
         var formData = new FormData();
         var xhr = new XMLHttpRequest();
+        
+        if (urlInput.value) {
+            formData.set('protoUrl', urlInput.value);
+        }
+        
         for (var i=0; i<fileList.length; i++) {
             formData.set('file'+i, fileList[i]);
         }

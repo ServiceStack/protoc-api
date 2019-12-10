@@ -46,13 +46,18 @@ namespace ProtocApi.ServiceInterface
         public object Any(Protoc request)
         {
             var tmpId = (Request as IHasStringId)?.Id?.Replace("|","").Replace(".","") ?? Guid.NewGuid().ToString();
-            var files = request.Files; 
-            if (request.Files.IsEmpty())
+            var files = request.Files ?? new Dictionary<string, string>();
+            
+            if (!string.IsNullOrEmpty(request.ProtoUrl))
             {
-                if (Request.Files.IsEmpty()) // allow Files uploaded by HTTP POST
-                    throw new ArgumentNullException(nameof(request.Files));
-                
-                files = new Dictionary<string, string>();
+                var fileName = request.ProtoUrl.EndsWith(".proto")
+                    ? request.ProtoUrl.LastRightPart('/')
+                    : "services.proto"; 
+                files[fileName] = request.ProtoUrl.GetStringFromUrl();
+            }
+
+            if (Request.Files.Length > 0)
+            {
                 foreach (var httpFile in Request.Files)
                 {
                     var fileName = httpFile.FileName ?? httpFile.Name;
@@ -84,6 +89,9 @@ namespace ProtocApi.ServiceInterface
                     }
                 }
             }
+
+            if (files.IsEmpty()) 
+                throw new ArgumentNullException(nameof(request.Files));
 
             var tmpPath = Path.Combine(ProtocConfig.TempDirectory, tmpId);
             var outPath = Path.Combine(tmpPath, "out");

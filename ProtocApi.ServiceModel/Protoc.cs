@@ -10,6 +10,7 @@ namespace ProtocApi.ServiceModel
     {
         public Lang Lang { get; set; }
         public Dictionary<string, string> Files { get; set; }
+        public string ProtoUrl { get; set; }
     }
     
     public class ProtocResponse
