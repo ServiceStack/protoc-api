@@ -114,7 +114,7 @@ title: gRPC protoc API
             </div>
             <div class="mb-2 pt-5 text-muted ml-3">or</div>
             <div class="url-control">
-                <input type="text" id="url-input" class="url-custom shadow-input" style="width:22rem" placeholder="URL to .proto">
+                <input type="text" id="url-input" class="url-custom shadow-input" style="width:22rem" placeholder="URL to .proto" onfocus="this.select()">
                 <div><small class="text-muted" style="margin-right:-.5em">try</small><button class="btn btn-link mb-1" 
                         onclick="document.getElementById('url-input').value='{{ `~/services.proto`.resolveUrl() }}'; render();">services.proto</button></div>
             </div>
