@@ -146,7 +146,7 @@ namespace ProtocApi.ServiceInterface
                 {
                     Lang.Swift, new ProtocOptions("swift", "Swift") {
                         GrpcOutModifiers = new string[] {},
-                        GrpcSubDir = "grpc",
+                        OutGrpcSubDir = "grpc",
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("protoc-gen-swift")}",
                             "--swift_opt=Visibility=Public",

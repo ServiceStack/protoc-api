@@ -21,7 +21,8 @@ namespace ProtocApi.ServiceInterface
         public string[] GrpcOutModifiers { get; set; }
         public string[] GrpcWebModifiers { get; set; }
         
-        public string GrpcSubDir { get; set; }
+        // swift overwrites protobuf + grpc in same file, use this to write grpc files in sub dir
+        public string OutGrpcSubDir { get; set; } 
         
         public bool IndividuallyPerFile { get; set; }
         
@@ -101,6 +102,9 @@ namespace ProtocApi.ServiceInterface
 
             var langOptions = ProtocConfig.Languages[request.Lang];
             var args = StringBuilderCache.Allocate();
+            
+            if (langOptions.OutGrpcSubDir != null)
+                try { Directory.CreateDirectory(Path.Combine(outPath, langOptions.OutGrpcSubDir)); } catch {}
 
             var outArgs = "";
             if (!langOptions.OutModifiers.IsEmpty())
@@ -132,8 +136,8 @@ namespace ProtocApi.ServiceInterface
                     grpcOut += ":";
                 grpcOut += "out";
 
-                if (langOptions.GrpcSubDir != null)
-                    grpcOut += "/" + langOptions.GrpcSubDir;
+                if (langOptions.OutGrpcSubDir != null)
+                    grpcOut += "/" + langOptions.OutGrpcSubDir;
             }
             
             args.AppendFormat($"-I . -I \"{ProtocConfig.ProtoIncludeDirectory}\" --{langOptions.Lang}_out={outArgs}out{grpcOut}");
