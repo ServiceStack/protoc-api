@@ -19,7 +19,7 @@ namespace ProtocApi.ServiceInterface
         public string Name { get; set; }
         public string[] OutModifiers { get; set; }
         public string[] GrpcOutModifiers { get; set; }
-        public string[] WebModifiers { get; set; }
+        public string[] GrpcWebModifiers { get; set; }
         
         public bool IndividuallyPerFile { get; set; }
         
@@ -133,10 +133,10 @@ namespace ProtocApi.ServiceInterface
             
             args.AppendFormat($"-I . -I \"{ProtocConfig.ProtoIncludeDirectory}\" --{langOptions.Lang}_out={outArgs}out{grpcOut}");
 
-            if (!langOptions.WebModifiers.IsEmpty())
+            if (!langOptions.GrpcWebModifiers.IsEmpty())
             {
                 var webArgs = "";
-                foreach (var modifier in langOptions.WebModifiers)
+                foreach (var modifier in langOptions.GrpcWebModifiers)
                 {
                     if (webArgs.Length > 0)
                         webArgs += ",";

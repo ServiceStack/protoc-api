@@ -63,32 +63,53 @@ namespace ProtocApi.ServiceInterface
                     }
                 },
                 {
-                    Lang.ObjectiveC, new ProtocOptions("objc", "Objective C")
+                    Lang.ObjectiveC, new ProtocOptions("objc", "Objective C") {
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_objective_c_plugin")}"
+                        }
+                    }
                 },
                 {
-                    Lang.Php, new ProtocOptions("php", "PHP")
+                    Lang.Php, new ProtocOptions("php", "PHP") {
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_php_plugin")}"
+                        }
+                    }
                 },
                 {
-                    Lang.Python, new ProtocOptions("python", "Python")
+                    Lang.Python, new ProtocOptions("python", "Python") {
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_python_plugin")}"
+                        }
+                    }
                 },
                 {
-                    Lang.Ruby, new ProtocOptions("ruby", "Ruby")
+                    Lang.Ruby, new ProtocOptions("ruby", "Ruby") {
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_python_plugin")}"
+                        }
+                    }
                 }, 
                 {
                     Lang.JavaScriptClosure, new ProtocOptions("js", "JavaScript (Closure)") {
                         OutModifiers = new[] {OutModifier.ImportStyleClosure},
+                        GrpcWebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 }, 
                 {
                     Lang.JavaScriptCommonJs, new ProtocOptions("js", "JavaScript (CommonJS)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
-                        WebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
+                        GrpcWebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 },
                 {
                     Lang.JavaScriptNodeJs, new ProtocOptions("js", "JavaScript (node.js)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs,OutModifier.Binary},
-                        GrpcOutModifiers = new string[] { },
+                        GrpcOutModifiers = new string[] {},
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_node_plugin")}",
                         }
@@ -104,13 +125,13 @@ namespace ProtocApi.ServiceInterface
                 {
                     Lang.TypeScript, new ProtocOptions("js", "TypeScript") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
-                        WebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWebText},
+                        GrpcWebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWebText},
                     }
                 }, 
                 {
                     Lang.TypeScriptBinary, new ProtocOptions("js", "TypeScript (Binary)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.Binary},
-                        WebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWeb},
+                        GrpcWebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWeb},
                     }
                 }, 
                 {
@@ -124,6 +145,7 @@ namespace ProtocApi.ServiceInterface
                 // https://github.com/apple/swift-protobuf/blob/master/Documentation/PLUGIN.md
                 {
                     Lang.Swift, new ProtocOptions("swift", "Swift") {
+                        GrpcOutModifiers = new string[] {},
                         Args = new[] {
                             "--swift_opt=Visibility=Public",
                         }
