@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using ServiceStack;
@@ -19,19 +18,6 @@ namespace ProtocApi.ServiceModel
         public Dictionary<string, string> GeneratedFiles { get; set; }
         public string ArchiveUrl { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
-    }
-
-    public static class OutModifier
-    {
-        public static string Lite = "lite";
-        public static string Binary = "binary";
-        public static string PluginGo = "plugins=grpc";
-        public static string ImportStyleClosure = "import_style=closure";
-        public static string ImportStyleCommonJs = "import_style=commonjs";
-        public static string ImportStyleCommonJsDts = "import_style=commonjs+dts";
-        public static string ImportStyleTypeScript = "import_style=typescript";
-        public static string ModeGrpcWeb = "mode=grpcweb";
-        public static string ModeGrpcWebText = "mode=grpcwebtext";
     }
 
     [DataContract]
@@ -95,16 +81,5 @@ namespace ProtocApi.ServiceModel
         TypeScript,
         [EnumMember(Value = "ts-binary")]
         TypeScriptBinary,
-    }
-
-    [Route("/langs", "GET")]
-    [DataContract]
-    public class GetLanguages { }
-
-    [DataContract]
-    public class GetLanguagesResponse
-    {
-        [DataMember]
-        public List<KeyValuePair<string, string>> Results { get; set; }
     }
 }

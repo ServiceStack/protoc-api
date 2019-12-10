@@ -6,6 +6,19 @@ using ServiceStack.Text;
 
 namespace ProtocApi.ServiceInterface
 {
+    public static class OutModifier
+    {
+        public static string Lite = "lite";
+        public static string Binary = "binary";
+        public static string PluginGo = "plugins=grpc";
+        public static string ImportStyleClosure = "import_style=closure";
+        public static string ImportStyleCommonJs = "import_style=commonjs";
+        public static string ImportStyleCommonJsDts = "import_style=commonjs+dts";
+        public static string ImportStyleTypeScript = "import_style=typescript";
+        public static string ModeGrpcWeb = "mode=grpcweb";
+        public static string ModeGrpcWebText = "mode=grpcwebtext";
+    }
+
     public class ProtocConfig
     {
         public string ExePath { get; set; }
