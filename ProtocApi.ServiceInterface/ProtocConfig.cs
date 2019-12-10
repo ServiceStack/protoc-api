@@ -48,7 +48,7 @@ namespace ProtocApi.ServiceInterface
                     Lang.Java, new ProtocOptions("java", "Java") {
                         Args = new[] {
                             $"--plugin={pluginPath("protoc-gen-grpc-java")}",
-                            "--grpc-java_out=lite:out",
+                            "--grpc-java_out=out",
                         }
                     }
                 },
@@ -58,7 +58,7 @@ namespace ProtocApi.ServiceInterface
                         OutModifiers = new[] { OutModifier.Lite },
                         Args = new[] {
                             $"--plugin={pluginPath("protoc-gen-grpc-java")}",
-                            "--grpc-java_out=out",
+                            "--grpc-java_out=lite:out",
                         }
                     }
                 },
