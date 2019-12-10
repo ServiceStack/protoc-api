@@ -85,6 +85,8 @@ namespace ProtocApi.ServiceModel
         JavaScriptClosure,
         [EnumMember(Value = "js-commonjs")]
         JavaScriptCommonJs,
+        [EnumMember(Value = "js-node")]
+        JavaScriptNodeJs,
 //        [EnumMember(Value = "js-tsd")] // doesn't work, uses closure
 //        JavaScriptCommonJsDts,
         [EnumMember(Value = "swift")]

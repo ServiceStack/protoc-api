@@ -85,6 +85,15 @@ namespace ProtocApi.ServiceInterface
                         WebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 },
+                {
+                    Lang.JavaScriptNodeJs, new ProtocOptions("js", "JavaScript (node.js)") {
+                        OutModifiers = new[] {OutModifier.ImportStyleCommonJs,OutModifier.Binary},
+                        GrpcOutModifiers = new string[] { },
+                        Args = new[] {
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_node_plugin")}",
+                        }
+                    }
+                },
                 // in contrast to docs commonjs + .d.ts doesn't work
 //                {
 //                    Lang.JavaScriptCommonJsDts, new ProtocOptions("js", "JavaScript (CommonJS + .d.ts)") {
