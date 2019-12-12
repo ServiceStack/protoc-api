@@ -103,7 +103,7 @@ namespace ProtocApi.ServiceInterface
                     Lang.Ruby, new ProtocOptions("ruby", "Ruby") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
-                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_python_plugin")}"
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_ruby_plugin")}"
                         }
                     }
                 }, 
