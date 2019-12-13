@@ -160,7 +160,7 @@ namespace ProtocApi.ServiceInterface
                 {
                     Lang.Swift, new ProtocOptions("swift", "Swift") {
                         Args = new[] {
-//                            $"--plugin=protoc-gen-grpc={pluginPath("protoc-gen-swift")}",
+                            $"--plugin=protoc-gen-grpc={pluginPath("protoc-gen-swift")}",
                             "--grpc-swift_out=Client=true,Server=false:out",
                             "--swift_opt=Visibility=Public",
                         }
