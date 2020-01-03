@@ -96,6 +96,14 @@ title: gRPC protoc API
     .normal-weight {
         font-weight: normal;
     }
+    #usage {}
+    pre {
+        display: block;
+        font-size: 87.5%;
+        color: #212529;
+        background: #f8f8f8;
+        padding: 10px;
+    }
 </style>
 
 <p class="lead">
@@ -143,6 +151,93 @@ title: gRPC protoc API
         {{#each langs}}
         <button class="btn btn-outline-primary" onclick="upload('{{it.Key}}')" title="lang='{{it.Key}}'" disabled>{{it.Value}}</button>
         {{/each}}
+    </div>
+</div>
+
+<div id="usage" class="container mt-5">
+    <div class="">
+        
+        <h3>Client Usage</h3>
+        
+        <p>
+            Easiest way to save protoc generated gRPC Service Clients locally is with the
+            <a href="https://docs.servicestack.net/dotnet-tool">x dotnet tool</a> (requires
+            <a href="https://dotnet.microsoft.com/download/dotnet-core/3.0">.NET Core 3.0</a>):
+        </p>
+        
+        <pre><code>$ dotnet tool install --global x</code></pre>
+        
+        <p>
+            Which will let you generate protoc clients from either a single <b>.proto</b> services description:
+        </p>
+
+        <pre><code>$ proto-&lt;lang&gt;</code> my-services.proto</pre>
+        
+        <p>
+            Or upload multiple <b>.proto</b> files by specifying a directory instead:
+        </p>
+        
+        <pre><code>$ proto-&lt;lang&gt;</code> /path/to/grpc/protos</pre>
+        
+        <p>
+            Use <b>-out</b> to specify which directory to save the protoc generated classes to, e.g:
+        </p>
+
+        <pre><code>$ proto-&lt;lang&gt;</code> my-services.proto -out /path/to/dir</pre>
+
+        <h4 class="py-2">Using ServiceStack</h4>
+        <p>
+            No local <b>.proto</b> files are necessary for <a href="https://docs.servicestack.net/grpc">ServiceStack gRPC</a> Services
+            which only requires specifying their URL, e.g:
+        </p>
+
+        <pre><code>$ proto-&lt;lang&gt;</code> https://todoworld.servicestack.net</pre>
+
+        <h4 class="py-2">Using curl</h4>
+        
+        <p>
+            Alternatively you can use <b>curl</b> command-line HTTP Client to download protoc generated classes in a <b>.zip</b> archive:
+        </p>
+
+        <pre><code>curl -F 'file1=@my-services.proto' {{'~/protoc/[lang].json?zip'.resolveUrl()}} -L -o grpc.zip</code></pre>
+
+        <h3 class="py-2">Language Codes</h3>
+        <p>
+            Below is a complete list of different languages supported by this public <b>gRPC</b> Service:
+        </p>
+        <table class="table mb-5">
+            <thead class="thead-dark">
+            <tr>
+                <th>Lang</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+            {{#each langs where not('js-closure,js-commonjs,ts,ts-binary'.split(',').contains(it.Key)) }}
+                <tr>
+                    <td>{{it.Key}}</td>
+                    <td>{{it.Value}}</td>
+                </tr>
+            {{/each}}
+
+            <tr>
+                <th colspan="2">gRPC Web</th>
+            </tr>
+
+            {{#each langs where 'js-closure,js-commonjs,ts,ts-binary'.split(',').contains(it.Key)}}
+            <tr>
+                <td>{{it.Key}}</td>
+                <td>{{it.Value}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        
+        <blockquote class="text-center my-3 text-muted">
+            Source code for this Service is available on GitHub:
+            <a href="https://github.com/ServiceStack/protoc-api">https://github.com/ServiceStack/protoc-api</a>
+        </blockquote>
     </div>
 </div>
 
@@ -261,6 +356,7 @@ title: gRPC protoc API
         }
         xhr.onload = function (ev) {
             if (this.status === 200) {
+                document.getElementById('usage').style.display = 'none';
                 var json = JSON.parse(xhr.responseText);
                 var sb = "", sbBody = "";
                 var i = 0;
