@@ -174,9 +174,20 @@ namespace ProtocApi.ServiceInterface
             }
 
             var serviceName = files.Count == 1 ? files.Keys.First() : "grpc";
+            var archiveUrl = Request.ResolveAbsoluteUrl(new GetArchive { RequestId = tmpId, FileName = $"{serviceName}.{langOptions.Lang}.zip" }.ToGetUrl());
+
+            if (Request.QueryString["zip"] != null)
+            {
+                return new HttpResult(new ProtocResponse {
+                    ArchiveUrl = archiveUrl
+                }) {
+                    Location = archiveUrl
+                };
+            }
+            
             var response = new ProtocResponse {
                 GeneratedFiles = new Dictionary<string, string>(),
-                ArchiveUrl = Request.ResolveAbsoluteUrl(new GetArchive { RequestId = tmpId, FileName = $"{serviceName}.{langOptions.Lang}.zip" }.ToGetUrl()),
+                ArchiveUrl = archiveUrl,
             };
 
             var fsOut = new FileSystemVirtualFiles(Path.Combine(tmpPath, "out"));
