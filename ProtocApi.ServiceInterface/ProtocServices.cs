@@ -253,8 +253,8 @@ namespace ProtocApi.ServiceInterface
 
 
         private static List<KeyValuePair<string, string>> languages;
-        public List<KeyValuePair<string, string>> Languages => languages ?? (languages = ProtocConfig.Languages
-            .Map(x => new KeyValuePair<string,string>(x.Key.ToJsv(), x.Value.Name)).OrderBy(x => x.Key).ToList());
+        public List<KeyValuePair<string, string>> Languages => languages ??= ProtocConfig.Languages
+            .Map(x => new KeyValuePair<string,string>(x.Key.ToJsv(), x.Value.Name)).OrderBy(x => x.Key).ToList();
 
         public object Get(GetLanguages request) => new GetLanguagesResponse {
             Results = Languages

@@ -7,12 +7,12 @@ namespace ProtocApi.Tests
 {
     public partial class IntegrationTest
     {
-        private static Dictionary<string, string> GetTodoWorldFiles() => 
-            new Dictionary<string, string> {
-                ["services.proto"] = File.ReadAllText("protos/todoworld/services.proto")
-            };
+        private static Dictionary<string, string> GetTodoWorldFiles() => new() {
+            ["services.proto"] = File.ReadAllText("protos/todoworld/services.proto")
+        };
         
-        static List<string> TodoWorldTypeNames = new List<string> {
+        static readonly List<string> TodoWorldTypeNames = new()
+        {
             "Todo",
             "GetTodo",
             "GetTodoResponse",
@@ -35,7 +35,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.CSharp,
+                Lang = ProtocLang.CSharp,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -48,7 +48,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Cpp,
+                Lang = ProtocLang.Cpp,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -62,7 +62,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaScriptClosure,
+                Lang = ProtocLang.JavaScriptClosure,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -75,7 +75,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaScriptCommonJs,
+                Lang = ProtocLang.JavaScriptCommonJs,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -89,7 +89,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.TypeScript,
+                Lang = ProtocLang.TypeScript,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -104,7 +104,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.TypeScriptBinary,
+                Lang = ProtocLang.TypeScriptBinary,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -119,7 +119,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Python,
+                Lang = ProtocLang.Python,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -132,7 +132,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Ruby,
+                Lang = ProtocLang.Ruby,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -145,7 +145,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Php,
+                Lang = ProtocLang.Php,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -158,7 +158,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Java,
+                Lang = ProtocLang.Java,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -171,7 +171,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaLite,
+                Lang = ProtocLang.JavaLite,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -184,7 +184,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.ObjectiveC,
+                Lang = ProtocLang.ObjectiveC,
                 Files = GetTodoWorldFiles(),
             });
             
@@ -198,7 +198,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Go,
+                Lang = ProtocLang.Go,
                 Files = GetTodoWorldFiles(),
             });
             

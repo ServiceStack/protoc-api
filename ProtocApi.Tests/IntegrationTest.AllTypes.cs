@@ -14,7 +14,8 @@ namespace ProtocApi.Tests
                 ["protobuf-net\\bcl.proto"] = File.ReadAllText("protos/alltypes/protobuf-net/bcl.proto"),
             };
         
-        static List<string> AllTypesTypeNames = new List<string> {
+        static List<string> AllTypesTypeNames = new()
+        {
             "AllCollectionTypes",
             "AllTypes",
             "DateTimeOffset",
@@ -40,7 +41,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.CSharp,
+                Lang = ProtocLang.CSharp,
                 Files = GetAllTypesFiles()
             });
             
@@ -54,7 +55,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Cpp,
+                Lang = ProtocLang.Cpp,
                 Files = GetAllTypesFiles()
             });
 
@@ -70,7 +71,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaScriptClosure,
+                Lang = ProtocLang.JavaScriptClosure,
                 Files = GetAllTypesFiles(),
             });
             
@@ -83,7 +84,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaScriptCommonJs,
+                Lang = ProtocLang.JavaScriptCommonJs,
                 Files = GetAllTypesFiles(),
             });
             
@@ -97,7 +98,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.TypeScript,
+                Lang = ProtocLang.TypeScript,
                 Files = GetAllTypesFiles(),
             });
             
@@ -112,7 +113,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.TypeScriptBinary,
+                Lang = ProtocLang.TypeScriptBinary,
                 Files = GetAllTypesFiles(),
             });
             
@@ -127,7 +128,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Python,
+                Lang = ProtocLang.Python,
                 Files = GetAllTypesFiles(),
             });
             
@@ -140,7 +141,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Ruby,
+                Lang = ProtocLang.Ruby,
                 Files = GetAllTypesFiles(),
             });
             
@@ -153,7 +154,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Php,
+                Lang = ProtocLang.Php,
                 Files = GetAllTypesFiles(),
             });
             
@@ -169,7 +170,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Java,
+                Lang = ProtocLang.Java,
                 Files = GetAllTypesFiles(),
             });
             
@@ -182,7 +183,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.JavaLite,
+                Lang = ProtocLang.JavaLite,
                 Files = GetAllTypesFiles(),
             });
             
@@ -195,7 +196,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.ObjectiveC,
+                Lang = ProtocLang.ObjectiveC,
                 Files = GetAllTypesFiles(),
             });
             
@@ -209,7 +210,7 @@ namespace ProtocApi.Tests
             var client = CreateClient();
 
             var response = client.Post(new Protoc {
-                Lang = Lang.Go,
+                Lang = ProtocLang.Go,
                 Files = GetAllTypesFiles(),
             });
             

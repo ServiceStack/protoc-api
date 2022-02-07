@@ -29,13 +29,13 @@ namespace ProtocApi.ServiceInterface
         private string pluginPath(string name) => 
             '"' + (PluginPath.CombineWith(name) + (Env.IsWindows ? ".exe" : "")).Replace("\\","/") + '"';
 
-        public Dictionary<Lang, ProtocOptions> Languages { get; set; }
+        public Dictionary<ProtocLang, ProtocOptions> Languages { get; set; }
 
         public ProtocConfig Init()
         {
-            Languages = new Dictionary<Lang, ProtocOptions> {
+            Languages = new Dictionary<ProtocLang, ProtocOptions> {
                 {
-                    Lang.Cpp, new ProtocOptions("cpp", "C++") {
+                    ProtocLang.Cpp, new ProtocOptions("cpp", "C++") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_cpp_plugin")}"
@@ -43,7 +43,7 @@ namespace ProtocApi.ServiceInterface
                     }
                 },
                 {
-                    Lang.CSharp, new ProtocOptions("csharp", "C#") {
+                    ProtocLang.CSharp, new ProtocOptions("csharp", "C#") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_csharp_plugin")}"
@@ -52,31 +52,31 @@ namespace ProtocApi.ServiceInterface
                 },
                 // requires installing https://pub.dev/packages/protoc_plugin on same server
                 {
-                    Lang.Dart, new ProtocOptions("dart", "Dart") {
+                    ProtocLang.Dart, new ProtocOptions("dart", "Dart") {
                         OutModifiers = new []{ "grpc" }
                     }
                 },
                 // https://grpc.io/docs/reference/java/generated-code/
                 {
-                    Lang.Java, new ProtocOptions("java", "Java") {
+                    ProtocLang.Java, new ProtocOptions("java", "Java") {
                         Args = new[] {
-                            $"--plugin={pluginPath("protoc-gen-grpc-java")}",
+                            $"--plugin=protoc-gen-grpc-java={pluginPath("protoc-gen-grpc-java")}",
                             "--grpc-java_out=out",
                         }
                     }
                 },
                 // Java Lite (Android) https://github.com/protocolbuffers/protobuf/blob/master/java/lite.md
                 {
-                    Lang.JavaLite, new ProtocOptions("java", "Java (Lite)") {
+                    ProtocLang.JavaLite, new ProtocOptions("java", "Java (Lite)") {
                         OutModifiers = new[] { OutModifier.Lite },
                         Args = new[] {
-                            $"--plugin={pluginPath("protoc-gen-grpc-java")}",
+                            $"--plugin=protoc-gen-grpc-java={pluginPath("protoc-gen-grpc-java")}",
                             "--grpc-java_out=lite:out",
                         }
                     }
                 },
                 {
-                    Lang.ObjectiveC, new ProtocOptions("objc", "Objective C") {
+                    ProtocLang.ObjectiveC, new ProtocOptions("objc", "Objective C") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_objective_c_plugin")}"
@@ -84,7 +84,7 @@ namespace ProtocApi.ServiceInterface
                     }
                 },
                 {
-                    Lang.Php, new ProtocOptions("php", "PHP") {
+                    ProtocLang.Php, new ProtocOptions("php", "PHP") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_php_plugin")}"
@@ -92,7 +92,7 @@ namespace ProtocApi.ServiceInterface
                     }
                 },
                 {
-                    Lang.Python, new ProtocOptions("python", "Python") {
+                    ProtocLang.Python, new ProtocOptions("python", "Python") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_python_plugin")}"
@@ -100,7 +100,7 @@ namespace ProtocApi.ServiceInterface
                     }
                 },
                 {
-                    Lang.Ruby, new ProtocOptions("ruby", "Ruby") {
+                    ProtocLang.Ruby, new ProtocOptions("ruby", "Ruby") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
                             $"--plugin=protoc-gen-grpc={pluginPath("grpc_ruby_plugin")}"
@@ -108,19 +108,19 @@ namespace ProtocApi.ServiceInterface
                     }
                 }, 
                 {
-                    Lang.JavaScriptClosure, new ProtocOptions("js", "JavaScript (Closure)") {
+                    ProtocLang.JavaScriptClosure, new ProtocOptions("js", "JavaScript (Closure)") {
                         OutModifiers = new[] {OutModifier.ImportStyleClosure},
                         GrpcWebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 }, 
                 {
-                    Lang.JavaScriptCommonJs, new ProtocOptions("js", "JavaScript (CommonJS)") {
+                    ProtocLang.JavaScriptCommonJs, new ProtocOptions("js", "JavaScript (CommonJS)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
                         GrpcWebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
                     }
                 },
                 {
-                    Lang.JavaScriptNodeJs, new ProtocOptions("js", "JavaScript (node.js)") {
+                    ProtocLang.JavaScriptNodeJs, new ProtocOptions("js", "JavaScript (node.js)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs,OutModifier.Binary},
                         GrpcOutModifiers = new string[] {},
                         Args = new[] {
@@ -130,25 +130,25 @@ namespace ProtocApi.ServiceInterface
                 },
                 // in contrast to docs commonjs + .d.ts doesn't work
 //                {
-//                    Lang.JavaScriptCommonJsDts, new ProtocOptions("js", "JavaScript (CommonJS + .d.ts)") {
+//                    ProtocLang.JavaScriptCommonJsDts, new ProtocOptions("js", "JavaScript (CommonJS + .d.ts)") {
 //                        OutModifiers = new[] {OutModifier.ImportStyleCommonJsDts},
 //                        WebModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.ModeGrpcWebText},
 //                    }
 //                },
                 {
-                    Lang.TypeScript, new ProtocOptions("js", "TypeScript") {
+                    ProtocLang.TypeScript, new ProtocOptions("js", "TypeScript") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs},
                         GrpcWebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWebText},
                     }
                 }, 
                 {
-                    Lang.TypeScriptBinary, new ProtocOptions("js", "TypeScript (Binary)") {
+                    ProtocLang.TypeScriptBinary, new ProtocOptions("js", "TypeScript (Binary)") {
                         OutModifiers = new[] {OutModifier.ImportStyleCommonJs, OutModifier.Binary},
                         GrpcWebModifiers = new[] {OutModifier.ImportStyleTypeScript, OutModifier.ModeGrpcWeb},
                     }
                 }, 
                 {
-                    Lang.Go, new ProtocOptions("go", "Go") {
+                    ProtocLang.Go, new ProtocOptions("go", "Go") {
                         OutModifiers = new[] {OutModifier.PluginGo},
                         IndividuallyPerFile = true,
                     }
@@ -158,7 +158,7 @@ namespace ProtocApi.ServiceInterface
                 // https://github.com/apple/swift-protobuf/blob/master/Documentation/PLUGIN.md
                 // https://github.com/grpc/grpc-swift
                 {
-                    Lang.Swift, new ProtocOptions("swift", "Swift") {
+                    ProtocLang.Swift, new ProtocOptions("swift", "Swift") {
                         Args = new[] {
                             $"--plugin={pluginPath("protoc-gen-swift")}",
                             "--swift_opt=Visibility=Public",

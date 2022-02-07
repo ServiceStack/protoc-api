@@ -7,14 +7,14 @@ namespace ProtocApi.ServiceModel
     [Route("/protoc/{Lang}")]
     public class Protoc : IReturn<ProtocResponse>
     {
-        public Lang Lang { get; set; }
+        public ProtocLang Lang { get; set; }
         public Dictionary<string, string> Files { get; set; }
         public string ProtoUrl { get; set; }
     }
     
     public class ProtocResponse
     {
-        public Lang Lang { get; set; }
+        public ProtocLang Lang { get; set; }
         public Dictionary<string, string> GeneratedFiles { get; set; }
         public string ArchiveUrl { get; set; }
         public ResponseStatus ResponseStatus { get; set; }
@@ -45,7 +45,7 @@ namespace ProtocApi.ServiceModel
     }
 
     [DataContract]
-    public enum Lang
+    public enum ProtocLang
     {
         [EnumMember(Value = "cpp")]
         Cpp,
