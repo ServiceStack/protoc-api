@@ -97,9 +97,9 @@ jobs:
       - name: docker-compose file prep
         uses: danielr1996/envsubst-action@1.0.0
         env:
-          APP_NAME: ${{ env.image_repository_name }}
           RELEASE_VERSION: ${{ env.TAG_NAME }}
-          IMAGE_REPO: ${{ github.event.repository.name }}
+          IMAGE_REPO: ${{ env.image_repository_name }}
+          APP_NAME: ${{ github.event.repository.name }}
           HOST_DOMAIN: ${{ secrets.DEPLOY_API }}
           LETSENCRYPT_EMAIL: ${{ secrets.LETSENCRYPT_EMAIL }}
         with:
