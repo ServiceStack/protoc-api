@@ -9,14 +9,39 @@ RUN dotnet publish -c release -o /out --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 
+# main protoc dependencies
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends --assume-yes \
       protobuf-compiler
 
-RUN apt --no-install-recommends --assume-yes install binutils git gnupg2 libc6-dev libcurl4  \
-    libedit2 libgcc-9-dev libpython2.7 libsqlite3-0 libstdc++-9-dev  \
-    libxml2 libz3-dev pkg-config tzdata zlib1g-dev
+# swift
+RUN apt-get -y install \
+      build-essential       \
+      clang                 \
+      cmake                 \
+      git                   \
+      icu-devtools          \
+      libcurl4-openssl-dev  \
+      libedit-dev           \
+      libicu-dev            \
+      libncurses5-dev       \
+      libpython3-dev        \
+      libsqlite3-dev        \
+      libxml2-dev           \
+      ninja-build           \
+      pkg-config            \
+      python2               \
+      python-six            \
+      python2-dev           \
+      python3-six           \
+      python3-distutils     \
+      rsync                 \
+      swig                  \
+      systemtap-sdt-dev     \
+      tzdata                \
+      unzip                 \
+      uuid-dev
 
 ENV PATH "$PATH:/app/protoc/linux64"
 WORKDIR /app
