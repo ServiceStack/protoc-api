@@ -35,9 +35,10 @@ jobs:
         with:
           ref: refs/tags/${{ github.event.inputs.version }}
           
+      # Assign environment variables used in subsequent steps
       - name: repository name fix
         run: echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
+      # TAG_NAME defaults to 'latest' if not a release or manual deployment
       - name: Assign version
         run: |
           echo "TAG_NAME=latest" >> $GITHUB_ENV
@@ -98,7 +99,7 @@ jobs:
         env:
           APP_NAME: ${{ env.image_repository_name }}
           RELEASE_VERSION: ${{ env.TAG_NAME }}
-          IMAGE_REPO: ${{ env.image_repository_name }}
+          IMAGE_REPO: ${{ github.event.repository.name }}
           HOST_DOMAIN: ${{ secrets.DEPLOY_API }}
           LETSENCRYPT_EMAIL: ${{ secrets.LETSENCRYPT_EMAIL }}
         with:
