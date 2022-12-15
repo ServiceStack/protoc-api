@@ -52,7 +52,7 @@ RUN apt-get update
 RUN apt-get install dart
 RUN dart pub global activate protoc_plugin
 
-ENV PATH "$PATH:/app/protoc/linux64:/usr/lib/swift/linux:/usr/lib/dart/bin:/.pub-cache/bin"
+ENV PATH "$PATH:/app/protoc/linux64:/usr/lib/swift/linux:/usr/lib/dart/bin:/root/.pub-cache/bin"
 
 WORKDIR /app
 COPY --from=build /out ./
