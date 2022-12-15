@@ -11,6 +11,7 @@ using ServiceStack.Text;
 
 namespace ProtocApi.Tests
 {
+    [Explicit]
     public partial class IntegrationTest
     {
         const string BaseUri = "http://localhost:2000/";
