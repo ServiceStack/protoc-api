@@ -14,7 +14,7 @@ RUN apt-get update \
     apt-get install --no-install-recommends --assume-yes \
       protobuf-compiler
 
-RUN apt install binutils git gnupg2 libc6-dev libcurl4  \
+RUN apt --no-install-recommends --assume-yes install binutils git gnupg2 libc6-dev libcurl4  \
     libedit2 libgcc-9-dev libpython2.7 libsqlite3-0 libstdc++-9-dev  \
     libxml2 libz3-dev pkg-config tzdata zlib1g-dev
 
