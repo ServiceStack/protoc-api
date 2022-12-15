@@ -15,4 +15,5 @@ RUN apt-get update \
 ENV PATH "$PATH:/app/protoc/linux64"
 WORKDIR /app
 COPY --from=build /out ./
+RUN chmod -R +x /app/protoc/linux64
 ENTRYPOINT ["dotnet", "ProtocApi.dll"]
