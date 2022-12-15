@@ -56,5 +56,8 @@ ENV PATH "$PATH:/app/protoc/linux64:/usr/lib/swift/linux:/usr/lib/dart/bin:/root
 
 WORKDIR /app
 COPY --from=build /out ./
+WORKDIR /usr/bin
+RUN cp *_plugin /app/protoc/linux64/
+WORKDIR /app
 RUN chmod -R +x /app/protoc/linux64
 ENTRYPOINT ["dotnet", "ProtocApi.dll"]

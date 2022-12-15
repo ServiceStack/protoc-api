@@ -38,7 +38,7 @@ namespace ProtocApi.ServiceInterface
                     ProtocLang.Cpp, new ProtocOptions("cpp", "C++") {
                         GrpcOutModifiers = new string[] { },
                         Args = new[] {
-                            $"--plugin=protoc-gen-grpc=grpc_cpp_plugin"
+                            $"--plugin=protoc-gen-grpc={pluginPath("grpc_cpp_plugin")}"
                         }
                     }
                 },
