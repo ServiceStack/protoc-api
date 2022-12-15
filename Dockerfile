@@ -13,7 +13,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends --assume-yes \
-      protobuf-compiler
+      protobuf-compiler protobuf-compiler-grpc
 
 # swift
 RUN apt-get -y install \
