@@ -41,7 +41,7 @@ namespace ProtocApi.Tests
                     TempDirectory = Path.Combine(contentRoot, "tmp"),
                 };
                 
-                try { FileSystemVirtualFiles.DeleteDirectoryRecursive(protocConfig.TempDirectory); } catch {}
+                try { FileSystemVirtualFiles.DeleteDirectory(protocConfig.TempDirectory); } catch {}
                 try { Directory.CreateDirectory(protocConfig.TempDirectory); } catch {}
                 
                 container.Register(protocConfig);
