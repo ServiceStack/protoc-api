@@ -58,6 +58,7 @@ WORKDIR /app
 COPY --from=build /out ./
 WORKDIR /usr/bin
 RUN cp *_plugin /app/protoc/linux64/
+LABEL service=protoc-api
 WORKDIR /app
 RUN chmod -R +x /app/protoc/linux64
 ENTRYPOINT ["dotnet", "ProtocApi.dll"]
